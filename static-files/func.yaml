@@ -1,5 +1,12 @@
 specVersion: 0.35.0
 name: static-files
 runtime: go
+registry: docker.io/cali0707
+image: docker.io/cali0707/static-files:latest
+imageDigest: sha256:cd39041232edb40483c74e4d6e6b3475728a7dc275eec42469f4ddb8cecfeff8
 created: 2024-02-06T14:09:42.234802804-05:00
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: default
