@@ -2,6 +2,7 @@ package function
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/cloudevents/sdk-go/v2/event"
@@ -14,19 +15,24 @@ func TestHandle(t *testing.T) {
 	e.SetID("id")
 	e.SetType("type")
 	e.SetSource("source")
-	e.SetData("text/plain", "data")
+	data, err := json.Marshal(map[string]string{"filePath": "index.html"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	e.SetData("application/json", data)
 
 	// Act
-	echo, err := Handle(context.Background(), e)
+	resp, err := Handle(context.Background(), e)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Assert
-	if echo == nil {
+	if resp == nil {
 		t.Errorf("received nil event") // fail on nil
 	}
-	if string(echo.Data()) != "data" {
-		t.Errorf("the received event expected data to be 'data', got '%s'", echo.Data())
+	if string(resp.Data()) != "<h1>Hello world</h1>\n" {
+		t.Errorf("the received event expected data to be '<h1>Hello world</h1>\n', got '%s'", resp.Data())
 	}
 }
